@@ -137,6 +137,8 @@ class Config:
         reload=False,
         reload_dirs=None,
         reload_delay=None,
+        reload_watches=None,
+        reload_ignores=None,
         workers=None,
         proxy_headers=True,
         forwarded_allow_ips=None,
@@ -174,6 +176,8 @@ class Config:
         self.debug = debug
         self.reload = reload
         self.reload_delay = reload_delay or 0.25
+        self.reload_watches = reload_watches if reload_watches else ["**/*.py"]
+        self.reload_ignores = reload_ignores
         self.workers = workers or 1
         self.proxy_headers = proxy_headers
         self.root_path = root_path

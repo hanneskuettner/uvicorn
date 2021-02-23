@@ -14,7 +14,7 @@ class StatReload(BaseReload):
         self.mtimes = {}
 
     def should_restart(self):
-        for filename in self.iter_py_files():
+        for filename in self.iter_watched_files():
             try:
                 mtime = os.path.getmtime(filename)
             except OSError:  # pragma: nocover
@@ -33,9 +33,11 @@ class StatReload(BaseReload):
                 return True
         return False
 
-    def iter_py_files(self):
+    def iter_watched_files(self):
         for reload_dir in self.config.reload_dirs:
-            for subdir, dirs, files in os.walk(reload_dir):
-                for file in files:
-                    if file.endswith(".py"):
-                        yield subdir + os.sep + file
+            for watch_glob in self.config.reload_watches:
+                for path in Path(reload_dir).glob(watch_glob):
+                    if self.config.reload_ignores is None or not any(
+                        path.match(ignore) for ignore in self.config.reload_ignores
+                    ):
+                        yield str(path)

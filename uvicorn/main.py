@@ -86,6 +86,19 @@ def print_version(ctx, param, value):
     " Defaults to 0.25s.",
 )
 @click.option(
+    "--reload-watch",
+    "reload_watches",
+    multiple=True,
+    default=["**/*.py"],
+    help="Set reload watch glob pattern. Can be used with --reload-dir.",
+)
+@click.option(
+    "--reload-ignore",
+    "reload_ignores",
+    multiple=True,
+    help="Set reload ignore glob pattern. Can be used with --reload-dir.",
+)
+@click.option(
     "--workers",
     default=None,
     type=int,
@@ -295,6 +308,8 @@ def main(
     reload: bool,
     reload_dirs: typing.List[str],
     reload_delay: float,
+    reload_watches: typing.List[str],
+    reload_ignores: typing.List[str],
     workers: int,
     env_file: str,
     log_config: str,
@@ -340,6 +355,8 @@ def main(
         "reload": reload,
         "reload_dirs": reload_dirs if reload_dirs else None,
         "reload_delay": reload_delay,
+        "reload_watches": reload_watches if reload_watches else None,
+        "reload_ignores": reload_ignores if reload_ignores else None,
         "workers": workers,
         "proxy_headers": proxy_headers,
         "forwarded_allow_ips": forwarded_allow_ips,
